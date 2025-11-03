@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Document</title>
+
+    <style>
+        label{
+            font-weight: bold;
+        }
+
+        input{
+            border: 1px outset white;
+            border-radius: 5px;
+        }
+
+        textarea{
+            border: 1px outset white;
+            border-radius: 5px;
+        }
+
+        h1{
+            text-align: center;
+        }
+
+        h2{
+            text-align: center;
+        }
+
+        .container{
+            margin: auto;
+            width: 20%;
+            height: 20%;
+            border: 1px outset white;
+            border-radius: 5px;
+            background-color: lightgray;
+            text-align: center;
+        }
+
+        .comments{
+            margin: auto;
+            width: 20%;
+            height: 20%;
+            border: 1px outset white;
+            border-radius: 5px;
+            background-color: lightgray;
+            text-align: center;
+
+        }
+
+        .center-textarea{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+        }
+
+        .submitBtn{
+            background-color: #04AA6D;
+            border: none;
+            padding: 5px 16px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+
+        }
+
+        .errBox{
+            color:red;
+            margin-top:10px;
+            text-align: center;
+
+        }
+    </style>
+
+    <h1>Forum</h1>
+    <div class = "container">
+        <form id = "commentForm">
+            <br>
+            <label>Enter new comment: </label><br>
+            <br>
+            <label>Username: </label>
+            <input type="text" id = "username" name="username" /><br>
+            <br>
+            <label>Password: </label>
+            <input type="text" id = "password" name="password" /><br>
+            <br>
+            <label>Repeat Password: </label>
+            <input type="text" id = "repeatPass" name="repeatPass" /><br>
+            <br>
+            <div class = "center-textarea">
+                <label>Comment:  </label>
+                <textarea id = "commentTextArea"> </textarea><br>
+            </div>
+            <br>
+            <label>Submit: </label>
+            <input type="submit" id = "submit-btn" name="submit-btn" class = "submitBtn"/><br>
+        </form>
+    </div>
+
+
+    <div id="errBox" class = "errBox"></div>
+    <br>
+
+    <h2>Komentari (<span id="commentCount">0</span>)</h2>
+
+    <<div id="comments" class = "comments"></div>
+
+
+
+    <script type = "text/javascript">
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const commentsDiv = document.getElementById("comments");
+            const countSpan = document.getElementById("commentCount");
+            const form = document.getElementById("commentForm");
+            const errBox = document.getElementById("errBox");
+            const commentText = document.getElementById("commentText");
+            const charCount = document.getElementById("charCount");
+            const submitBtn = document.getElementById("submitBtn");
+
+
+            const initialComments = [
+                {autor:"Marko",komentar:"Neki komentar"},
+                {autor:"Ivan",komentar:"Jos neki komentar"},
+                {autor:"Petra",komentar:"Neki komentar 2"},
+                {autor:"Anja",komentar:"Neki komentar 3"},
+                {autor:"Tomislav",komentar:"Neki komentar 4"},
+                {autor:"Jana",komentar:"Neki komentar 5"}
+            ]
+
+            /* Validacija forme */
+            let validateForm = (username, pass, repeatPass, commentTextArea) => {
+                if(username.trim().length < 3 || pass.trim().length < 3 || commentTextArea.trim().length < 3){
+                    return("Input should be at least 3 characters");
+                }
+
+                if(pass !== repeatPass){
+                    return("Passwords do not match");
+
+                }
+            };
+
+            /* Provjera forme */
+            form.addEventListener("submit", (e) => {
+                e.preventDefault();
+                errBox.textContent = "";
+
+                const username = document.getElementById("username").value;
+                const pass = document.getElementById("password").value;
+                const repeatPass = document.getElementById("repeatPass").value;
+                const commentTextArea = document.getElementById("commentTextArea").value;
+                const comment = document.getElementById("comments");
+
+                const error = validateForm(username, pass, repeatPass, commentTextArea);
+                if(error){
+                    errBox.textContent = error;
+                    return;
+                }
+
+                if(comment.length === 0)
+                    return "Komentar ne smije biti prazan"
+
+                /* Dodavanje novog komentara */
+                initialComments.push({autor: username, komentar: pass});
+
+                /* Prikaz komentara */
+                let showComments = () => {
+                    commentsDiv.innerHTML = "";
+                    initialComments.forEach(comment => {
+                        const div = document.createElement("div");
+                        div.textContent = `${comment.autor}: ${comment.komentar}`;
+                        commentsDiv.appendChild(div);
+                    });
+                    countSpan.textContent = initialComments.length;
+                };
+
+                showComments();
+
+                /* Reset forme */
+                form.reset();
+                //charCount.textContent = "0";
+                //submitBtn.disabled = false;
+
+            });
+
+        });
+
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>
