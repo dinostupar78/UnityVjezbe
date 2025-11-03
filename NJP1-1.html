@@ -92,13 +92,15 @@
             <label>Repeat Password: </label>
             <input type="text" id = "repeatPass" name="repeatPass" /><br>
             <br>
-            <div class = "center-textarea">
-                <label>Comment:  </label>
-                <textarea id = "commentTextArea"> </textarea><br>
+            <div class="center-textarea">
+                <label>Comment:&nbsp;</label>
+                <textarea id="commentTextArea" rows="3" cols="25"></textarea>
+                <span style="padding-left: 10px;" id="charCount">0</span>
             </div>
+
             <br>
             <label>Submit: </label>
-            <input type="submit" id = "submit-btn" name="submit-btn" class = "submitBtn"/><br>
+            <input type="submit" id = "submitBtn" name="submitBtn" class = "submitBtn"/><br>
         </form>
     </div>
 
@@ -108,7 +110,7 @@
 
     <h2>Komentari (<span id="commentCount">0</span>)</h2>
 
-    <<div id="comments" class = "comments"></div>
+    <div id="comments" class = "comments"></div>
 
 
 
@@ -120,11 +122,10 @@
             const countSpan = document.getElementById("commentCount");
             const form = document.getElementById("commentForm");
             const errBox = document.getElementById("errBox");
-            const commentText = document.getElementById("commentText");
+
+            const commentText = document.getElementById("commentTextArea");
             const charCount = document.getElementById("charCount");
             const submitBtn = document.getElementById("submitBtn");
-
-
 
             const initialComments = [
                 {autor:"Marko",komentar:"Neki komentar"},
@@ -135,9 +136,17 @@
                 {autor:"Jana",komentar:"Neki komentar 5"}
             ]
 
+            /* Provjera znakića */
+            commentText.addEventListener("input", () => {
+                const len = commentText.value.length;
+                charCount.textContent = len;
+                submitBtn.disabled = len > 50;
+                errBox.textContent = len > 50 ? "Najviše 50 znakova!" : "";
+            });
+
             /* Validacija forme */
-            let validateForm = (username, pass, repeatPass, commentTextArea) => {
-                if(username.trim().length < 3 || pass.trim().length < 3 || commentTextArea.trim().length < 3){
+            let validateForm = (username, pass, repeatPass, commentText) => {
+                if(username.trim().length < 3 || pass.trim().length < 3 || commentText.trim().length < 3){
                     return("Input should be at least 3 characters");
                 }
 
@@ -155,10 +164,9 @@
                 const username = document.getElementById("username").value;
                 const pass = document.getElementById("password").value;
                 const repeatPass = document.getElementById("repeatPass").value;
-                const commentTextArea = document.getElementById("commentTextArea").value;
-                const comment = document.getElementById("comments");
+                const comment = commentText.value;
 
-                const error = validateForm(username, pass, repeatPass, commentTextArea);
+                const error = validateForm(username, pass, repeatPass, comment );
                 if(error){
                     errBox.textContent = error;
                     return;
@@ -168,7 +176,7 @@
                     return "Komentar ne smije biti prazan"
 
                 /* Dodavanje novog komentara */
-                initialComments.push({autor: username, komentar: pass});
+                initialComments.push({autor: username, komentar: comment});
 
                 /* Prikaz komentara */
                 let showComments = () => {
@@ -183,12 +191,15 @@
 
                 showComments();
 
+
+
                 /* Reset forme */
                 form.reset();
-                //charCount.textContent = "0";
-                //submitBtn.disabled = false;
+                charCount.textContent = "0";
 
             });
+
+
 
         });
 
