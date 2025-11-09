@@ -38,6 +38,10 @@ export class Test {
         comment: this.newComment,
         editing: false
       });
+
+      console.log(this.posts);
+
+
       this.newUser = '';
       this.newComment = '';
       this.adding = false;
